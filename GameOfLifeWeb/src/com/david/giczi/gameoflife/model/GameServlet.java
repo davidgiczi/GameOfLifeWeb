@@ -2,6 +2,7 @@ package com.david.giczi.gameoflife.model;
 
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,22 +28,25 @@ public class GameServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String patternName=request.getParameter("pattern");
-		
+		String value=request.getParameter("input");
 		
 		if(patternName!=null) {
-			
-			this.patternName=patternName;
 			
 			startFunction(patternName, request, response);
 			
 		}
-		else {
+		else if(patternName==null && value==null){
+			
 			
 			runFunction(request, response);
 		}
 		
-		
-	
+		else if(value!=null) {
+			
+			
+			inputFunction(value, request, response);
+			
+		}
 		
 	}
 
@@ -50,23 +54,28 @@ public class GameServlet extends HttpServlet {
 	
 	private void startFunction(String patternName, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		if("Empty table".equals(patternName)) {
+			this.patternName="Your pattern";
+		}
+		else {
+			
+			this.patternName=patternName;
+		}
+		
 		counter=0;
 		new Row(50);
-		table=new TableLogic(Row.getLogicValue());
+		table=new TableLogic(Row.getRowValue());
 		table.inputPattern(patternName);
 		
 		request.setAttribute("run", false);
-		request.setAttribute("counter", counter);
-		request.setAttribute("row", Row.getJSPValue());
-		request.setAttribute("names", PatternName.NAMES);
-		request.setAttribute("patternName", patternName);
-		request.setAttribute("pattern", table.getBeforeTable());
-		request.getRequestDispatcher("table.jsp").forward(request, response);
+		request.setAttribute("badvalue", false);
+		
+		initJSP(request, response);
 		
 	}
 	
 
-	private void runFunction( HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void runFunction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		counter++;
 		
@@ -83,23 +92,56 @@ public class GameServlet extends HttpServlet {
 		}
 		
 		table.changeTable();
-			
-		request.setAttribute("pattern", table.getBeforeTable());
-		request.setAttribute("counter", counter);
-		request.setAttribute("row", Row.getJSPValue());
-		request.setAttribute("names", PatternName.NAMES);
-		request.setAttribute("patternName", patternName);
-		request.getRequestDispatcher("table.jsp").forward(request, response);
+		
+		request.setAttribute("badvalue", false);
+		initJSP(request, response);
 		
 	}
 	
+	private void inputFunction(String input, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+				if(table==null) {
+					
+					startFunction("Empty table", request, response);
+				}
+		
+			
+			try {
+				table.editPatternInTable(input);
+				
+				request.setAttribute("run", false);
+				request.setAttribute("badvalue", false);
+				initJSP(request, response);
+				
+			} catch (InvalidInputValueException e) {
+				
+				request.setAttribute("run", false);
+				request.setAttribute("badvalue", true);
+				initJSP(request, response);
+				
+			}
+				
+			
+	}
+	
+	
+	
+	private void initJSP(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		request.setAttribute("counter", counter);
+		request.setAttribute("pattern", table.getBeforeTable());
+		request.setAttribute("row", Row.getRowValue());
+		request.setAttribute("names", PatternName.NAMES);
+		request.setAttribute("patternName", patternName);
+		request.getRequestDispatcher("table.jsp").forward(request, response);
+			
+	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		doGet(request, response);
 	}
-
-
 	
 
 }

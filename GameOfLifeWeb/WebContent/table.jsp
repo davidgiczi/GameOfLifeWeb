@@ -17,6 +17,8 @@ background-color: powderblue;
 
 table, td {
   
+  font-size: 10px;
+  
   border: 1px solid black;
  	
   border-collapse: collapse;
@@ -43,12 +45,27 @@ height:800px;
 
 <table align="center">
 
-<c:forEach begin="0" end="${row}" varStatus="i">
+<c:forEach begin="0" end="${row-1}" varStatus="i">
 
 <tr>
 
-<c:forEach begin="0" end="${row}" varStatus="j">
-<td id="${i.index*50+j.index}" style="background: white"></td>
+<c:forEach begin="0" end="${row-1}" varStatus="j">
+
+
+<c:if test="${i.index*row+j.index lt row}">
+<td id="${i.index*row+j.index}" style="background: white"><font style="color: black">${i.index*row+j.index}</font></td>
+</c:if>
+
+<c:if test="${i.index*row+j.index ge row && j.index%row == 0}">
+<td id="${i.index*row+j.index}" style="background: white"><font style="color: black">${i.index*row+j.index}</font></td>
+</c:if>
+
+ 
+<c:if test="${i.index*row+j.index ge row+1 && j.index%row!=0}">
+<td id="${i.index*row+j.index}" style="background: white"><font style="color: white">${i.index*row+j.index}</font></td>
+</c:if>
+
+
 </c:forEach>
 
 </tr>
@@ -75,68 +92,78 @@ height:800px;
 </form>
 
 
+<form style="float: left" action="GameServlet">
+<input size="4" type="text" name="input">
+<input type="submit" value="Send">
+</form>
+
 <button  onclick="start()">Start</button>
 <button  onclick="stop()">Stop</button>
 
+
 <button style="float: right" onclick="exit()">Exit</button>
+
 
 <script>
 
-
 var table=${pattern};
+var i=0;
 var run=${run};
 var go;
-var i=0;
+var bad=${badvalue};
 
 
-	
-	while(i<table.length) {
-		
-		
-		
-		if(table[i]) {
-			
-			document.getElementById(i).style.backgroundColor="#ffbf00";
-			
-		}
-		
-		i++;
-	}
-	
-		
-	
-	function running() {
-		
-		i=0;
-		window.location.reload();
-		
-	}
-	
 
-	if(run) {
+while(i<table.length) {
+	
+	
+	if(table[i]) {
 		
-		go=setInterval(running, 400);
+		document.getElementById(i).style.backgroundColor="#ffbf00";
+		
 	}
 	
-	function start() {
-		
-		document.getElementById("start").submit();
-	}
-	
-	
-	function stop() {
-		
-		clearInterval(go);
-	}
-	
-	function exit() {
-		
-		if(confirm("Would you like to exit?")){
+	i++;
+}
 
-            window.close();
 
-		}    
-	}
+function running() {
+	
+	i=0;
+	window.location.reload();
+	
+}
+
+if(run) {
+	
+	go=setInterval(running, 600);
+}
+
+function start() {
+	
+	document.getElementById("start").submit();
+}
+
+
+function stop() {
+	
+	clearInterval(go);
+}
+
+if(bad){
+	
+	alert("Invalid input value!");
+}
+
+function exit() {
+	
+	if(confirm("Would you like to exit?")){
+
+       window.close();
+
+	}    
+
+}
 </script>
 
 

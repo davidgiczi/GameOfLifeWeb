@@ -37,22 +37,20 @@ public class TableLogic implements Pattern, PatternName{
 	public void inputPattern(String name) {
 		
 		
-		if(PatternName.NAMES[0].equals(name)) {
+		for(int i=0; i<NAMES.length; i++) {
 			
 			
-			for (Integer value : PATTERNS[0]) {
-				beforeTable.set(value, true);
+			if(NAMES[i].equals(name)) {
+				
+				
+				for (Integer value : PATTERNS[i]) {
+					beforeTable.set(value, true);
+				}
+					
 			}
-			
+				
 		}
-		else if(PatternName.NAMES[1].equals(name)) {
 			
-			for (Integer value : PATTERNS[1]) {
-				beforeTable.set(value, true);
-			}
-			
-		}
-		
 	}
 	
 	private int getNeighborsNumber(int index) {
@@ -131,4 +129,46 @@ public class TableLogic implements Pattern, PatternName{
 		
 		return false;
 	}
+	
+	public void editPatternInTable(String value) throws InvalidInputValueException {
+		
+		
+		try {
+			
+			int  index=Integer.parseInt(value);
+
+			if(index<51 || index>=row*row) {
+				
+				throw new InvalidInputValueException();
+			}
+			
+			for(int i=0; i<row*row; i+=50) {
+				
+				if(index==i) {
+					throw new InvalidInputValueException();
+				}
+				
+			}
+			
+			if(beforeTable.get(index)) {
+				
+				beforeTable.set(index, false);
+				
+			}
+			else {
+				
+				beforeTable.set(index, true);
+				
+			}
+			
+		} catch (NumberFormatException e) {
+			
+			throw new InvalidInputValueException();
+		}
+		
+		
+		
+	}
+	
+	
 }

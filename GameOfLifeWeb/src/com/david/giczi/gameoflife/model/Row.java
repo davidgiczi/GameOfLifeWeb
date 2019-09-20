@@ -3,25 +3,23 @@ package com.david.giczi.gameoflife.model;
 public class Row {
 
 	
-	private static int logicValue;
-	private static int JSPValue;
+	private static int rowValue;
+	
 	
 	
 	public Row(int row) {
 		
-		Row.logicValue=row;
-		Row.JSPValue=row-1;
+		Row.rowValue=row;
 	}
 
 
-	public static int getLogicValue() {
-		return logicValue;
+
+	public static int getRowValue() {
+		return rowValue;
 	}
 
 
-	public static int getJSPValue() {
-		return JSPValue;
-	}
+	
 
 	
 	

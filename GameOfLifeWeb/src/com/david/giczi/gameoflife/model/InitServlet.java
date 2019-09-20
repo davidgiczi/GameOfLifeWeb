@@ -25,7 +25,7 @@ public class InitServlet extends HttpServlet {
 		new Row(50);
 		
 		request.setAttribute("names", PatternName.NAMES);
-		request.setAttribute("row", Row.getJSPValue());
+		request.setAttribute("row", Row.getRowValue());
 		request.getRequestDispatcher("table.jsp").forward(request, response);
 	}
 
