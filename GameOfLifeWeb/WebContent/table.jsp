@@ -129,7 +129,7 @@ while(i<table.length) {
 
 function running() {
 	
-	i=0;
+	
 	window.location.reload();
 	
 }
